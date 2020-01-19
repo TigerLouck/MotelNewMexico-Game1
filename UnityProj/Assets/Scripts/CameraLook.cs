@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class CameraLook : MonoBehaviour
 {
-	float mouseX;
-	float mouseY;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public float mouseX;
+	public float mouseY;
+	// Start is called before the first frame update
+	void Start()
+	{
 
-    // Update is called once per frame
-    void Update()
-    {
+	}
+
+	// Update is called once per frame
+	void Update()
+	{
 		mouseX += Input.GetAxisRaw("Mouse X");
-		mouseY += Input.GetAxisRaw("Mouse Y");
-		Debug.Log(Input.GetAxis("Roll"));
+		mouseY += -Input.GetAxisRaw("Mouse Y");
 
-		transform.rotation = transform.rotation * Quaternion.Euler(mouseY, mouseX, Input.GetAxis("Roll"));
+		transform.rotation = Quaternion.Euler(mouseY, mouseX, 0);
 
 	}
 }

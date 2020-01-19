@@ -4,20 +4,48 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-	public Transform CameraPivot;
-	public WheelCollider[] Wheels;
-	public WheelCollider[] SteeringWheels;
+	public Transform cameraPivot;
+	public WheelCollider[] wheels;
+	public WheelCollider[] steeringWheels;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	// Start is called before the first frame update
+	void Start()
+	{
 
-    // Update is called once per frame
-    void Update()
-    {
+	}
+
+	// Update is called once per frame
+	void Update()
+	{
 		// Move the wheels
-        if ()
-    }
+		
+		foreach (WheelCollider wheel in wheels)
+		{
+			if (Input.GetMouseButton(0))
+			{
+				wheel.motorTorque = 1000;
+				wheel.brakeTorque = 0;
+			}
+			else
+			{
+				wheel.motorTorque = 0;
+				wheel.brakeTorque = 5000;
+			}
+		}
+
+		//steer
+		float steer;
+		if (cameraPivot.localEulerAngles.y > 180)//stupid euler bullshit, god
+		{
+			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 310, 360);
+		}
+		else
+		{
+			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 0, 50);
+		}
+		foreach (WheelCollider wheel in steeringWheels)
+		{
+			wheel.steerAngle = steer;
+		}
+	}
 }
