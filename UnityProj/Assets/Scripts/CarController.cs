@@ -7,11 +7,11 @@ public class CarController : MonoBehaviour
 	public Transform cameraPivot;
 	public WheelCollider[] wheels;
 	public WheelCollider[] steeringWheels;
-
+	Rigidbody thisRB;
 	// Start is called before the first frame update
 	void Start()
 	{
-
+		thisRB = GetComponent<Rigidbody>();
 	}
 
 	// Update is called once per frame
@@ -23,13 +23,13 @@ public class CarController : MonoBehaviour
 		{
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
-				wheel.motorTorque = 1000;
-				wheel.brakeTorque = 0;
+				wheel.motorTorque = 2000;
+				wheel.brakeTorque = Mathf.Abs(wheel.rpm) / .01f;
 			}
 			else
 			{
 				wheel.motorTorque = 0;
-				wheel.brakeTorque = 10000;
+				wheel.brakeTorque = 100000;
 			}
 		}
 
