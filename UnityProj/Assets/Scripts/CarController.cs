@@ -21,7 +21,7 @@ public class CarController : MonoBehaviour
 		
 		foreach (WheelCollider wheel in wheels)
 		{
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
 				wheel.motorTorque = 1000;
 				wheel.brakeTorque = 0;
@@ -29,19 +29,19 @@ public class CarController : MonoBehaviour
 			else
 			{
 				wheel.motorTorque = 0;
-				wheel.brakeTorque = 5000;
+				wheel.brakeTorque = 10000;
 			}
 		}
 
 		//steer
 		float steer;
-		if (cameraPivot.localEulerAngles.y > 180)//stupid euler bullshit, god
+		if (cameraPivot.localEulerAngles.y > 180)//stupid euler bullshit, god 
 		{
-			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 310, 360);
+			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 310, 36000); // 310, 360
 		}
 		else
 		{
-			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 0, 50);
+			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 0, 2000); // 0, 50
 		}
 		foreach (WheelCollider wheel in steeringWheels)
 		{
