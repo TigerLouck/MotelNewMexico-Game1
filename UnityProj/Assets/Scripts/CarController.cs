@@ -12,7 +12,7 @@ public class CarController : MonoBehaviour
 	void Start()
 	{
 		thisRB = GetComponent<Rigidbody>();
-		thisRB.centerOfMass = new Vector3(0, -1, 0);
+		thisRB.centerOfMass = new Vector3(0, -.75f, -.1f);
 	}
 	// Update is called once per frame
 	void Update()
@@ -32,7 +32,7 @@ public class CarController : MonoBehaviour
 			else
 			{
 				wheel.motorTorque = 0;
-				wheel.brakeTorque = 1500;
+				wheel.brakeTorque = 200;
 			}
 
 			//Visuals
