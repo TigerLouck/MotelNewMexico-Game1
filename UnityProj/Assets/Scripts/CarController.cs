@@ -21,17 +21,27 @@ public class CarController : MonoBehaviour
 		
 		foreach (WheelCollider wheel in wheels)
 		{
+			// Simulation
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
-				wheel.motorTorque = 3000;
+				wheel.motorTorque = 2500;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
-				wheel.brakeTorque = 3000 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
+				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
+				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
 			}
 			else
 			{
 				wheel.motorTorque = 0;
-				wheel.brakeTorque = 1000;
+				wheel.brakeTorque = 1500;
 			}
+
+			//Visuals
+			Vector3 outPos;
+			Quaternion outRot;
+			wheel.GetWorldPose(out outPos, out outRot); //fucking dumb architecture
+			wheel.transform.GetChild(0).position = outPos;
+			wheel.transform.GetChild(0).rotation = outRot;
+
 		}
 
 		//steer
