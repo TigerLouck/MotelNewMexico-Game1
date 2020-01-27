@@ -23,9 +23,9 @@ public class CarController : MonoBehaviour
 		{
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
-				wheel.motorTorque = 2000;
+				wheel.motorTorque = 3000;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
-				wheel.brakeTorque = 2000 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
+				wheel.brakeTorque = 3000 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
 			}
 			else
 			{
