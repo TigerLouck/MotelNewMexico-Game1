@@ -32,7 +32,7 @@ public class CarController : MonoBehaviour
 			else
 			{
 				wheel.motorTorque = 0;
-				wheel.brakeTorque = 200;
+				wheel.brakeTorque = 700;
 			}
 
 			//Visuals
