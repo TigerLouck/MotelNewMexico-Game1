@@ -9,6 +9,9 @@ public class CarController : MonoBehaviour
 	public WheelCollider[] steeringWheels;
 	public float speedCap;
 	Rigidbody thisRB;
+
+	public AudioManager audioManager;
+
 	void Start()
 	{
 		thisRB = GetComponent<Rigidbody>();
@@ -24,6 +27,7 @@ public class CarController : MonoBehaviour
 			// Simulation
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
+				audioManager.PlayEngine();
 				wheel.motorTorque = 2500;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
@@ -31,6 +35,7 @@ public class CarController : MonoBehaviour
 			}
 			else
 			{
+				audioManager.StopEngine();
 				wheel.motorTorque = 0;
 				wheel.brakeTorque = 700;
 			}
@@ -54,9 +59,28 @@ public class CarController : MonoBehaviour
 		{
 			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 0, 50); // 0, 50
 		}
+
+		bool isSlipping = false;
+		WheelHit hit = new WheelHit();
 		foreach (WheelCollider wheel in steeringWheels)
 		{
 			wheel.steerAngle = steer;
+			if(wheel.GetGroundHit(out hit))
+            {
+				//Debug.Log(hit.sidewaysSlip);
+				if((hit.sidewaysSlip > .1f || hit.sidewaysSlip < -.1f) && isSlipping == false)
+                {
+					audioManager.PlayScreech();
+					isSlipping = true;
+                }
+				else
+                {
+					audioManager.StopScreech();
+					isSlipping = false;
+				}
+            }
 		}
+
+		
 	}
 }
