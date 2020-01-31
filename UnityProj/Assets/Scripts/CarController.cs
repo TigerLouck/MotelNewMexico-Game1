@@ -33,6 +33,13 @@ public class CarController : MonoBehaviour
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
 				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
 			}
+			else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
+			{
+				wheel.motorTorque = -2500;
+				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
+				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
+				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
+			}
 			else
 			{
 				audioManager.StopEngine();
@@ -51,14 +58,23 @@ public class CarController : MonoBehaviour
 
 		//steer
 		float steer;
-		if (cameraPivot.localEulerAngles.y > 180)//stupid euler bullshit, god 
+		float camOrient = cameraPivot.localEulerAngles.y;
+		if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
 		{
-			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 310, 360); // 310, 360
+			if (camOrient > 180) camOrient -= 180;
+			else camOrient += 180;
+			camOrient = 360 - camOrient;
+		}
+
+		if (camOrient > 180)//stupid euler bullshit, god 
+		{
+			steer = Mathf.Clamp(camOrient, 310, 360); // 310, 360
 		}
 		else
 		{
-			steer = Mathf.Clamp(cameraPivot.localEulerAngles.y, 0, 50); // 0, 50
+			steer = Mathf.Clamp(camOrient, 0, 50); // 0, 50
 		}
+
 
 		bool isSlipping = false;
 		WheelHit hit = new WheelHit();
