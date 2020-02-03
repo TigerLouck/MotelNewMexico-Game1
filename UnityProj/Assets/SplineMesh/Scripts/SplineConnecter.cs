@@ -18,6 +18,7 @@ public class SplineConnecter : MonoBehaviour
     private GameObject currentSpline;
 
     private PieceType lastPiecePlaced;
+    private bool isFirstFrame = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +55,11 @@ public class SplineConnecter : MonoBehaviour
     // connects 3 straight pieces together to start out
     private void StartConnection()
     {
+        if(isFirstFrame)
+            return;
+        else
+            isFirstFrame = true;
+            
         for(int i=1;i<=splineStraights.Length-1;i++)
         {
             // get all nodes for the starting and ending pieces
