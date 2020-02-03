@@ -21,7 +21,7 @@ public class WheelParticleController : MonoBehaviour
     {
         if(Wheel.GetGroundHit(out hit))
         {
-            emitter.rateOverTime = (Mathf.Abs(hit.forwardSlip) + Mathf.Abs(hit.sidewaysSlip)) * 100;
+            emitter.rateOverTime = (Mathf.Abs(hit.forwardSlip) + Mathf.Abs(hit.sidewaysSlip)) * 50 - 25;
         } 
         else
         {
