@@ -20020,6 +20020,7 @@ MonoBehaviour:
   - {fileID: 5471638033033827620}
   - {fileID: 5471638033054113396}
   speedCap: 20
+  dedText: {fileID: 0}
   audioManager: {fileID: 0}
 --- !u!1 &8296172669234912420
 GameObject:
