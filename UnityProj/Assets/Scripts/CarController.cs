@@ -121,4 +121,14 @@ public class CarController : MonoBehaviour
 		yield return new WaitForSeconds(3);
 		UnityEngine.SceneManagement.SceneManager.LoadScene(0);
 	}
+
+	private void OnDisable()
+	{
+		GetComponentInChildren<CameraLook>().enabled = false;
+	}
+
+	private void OnEnable()
+	{
+		GetComponentInChildren<CameraLook>().enabled = true;
+	}
 }
