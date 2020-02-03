@@ -9,14 +9,20 @@ public class CarController : MonoBehaviour
 	public WheelCollider[] steeringWheels;
 	public float speedCap;
 	Rigidbody thisRB;
+	float lastGroundedElevation;
+	public UnityEngine.UI.Text dedText;
 
 	public AudioManager audioManager;
+
+
 
 	void Start()
 	{
 		thisRB = GetComponent<Rigidbody>();
 		thisRB.centerOfMass = new Vector3(0, -.75f, -.1f);
+		dedText.gameObject.SetActive(false);
 	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -83,6 +89,10 @@ public class CarController : MonoBehaviour
 			wheel.steerAngle = steer;
 			if(wheel.GetGroundHit(out hit))
             {
+				//Wheel grounding rider for kill floor
+				lastGroundedElevation = hit.point.y;
+
+				//Sounds
 				//Debug.Log(hit.sidewaysSlip);
 				if((hit.sidewaysSlip > .1f || hit.sidewaysSlip < -.1f) && isSlipping == false)
                 {
@@ -97,6 +107,18 @@ public class CarController : MonoBehaviour
             }
 		}
 
+		//Kill Floor
+		if (transform.position.y < lastGroundedElevation - 50)
+		{
+			dedText.gameObject.SetActive(true);
+			StartCoroutine(DieAndRespawn());
+		}
 		
+	}
+
+	IEnumerator DieAndRespawn()
+	{
+		yield return new WaitForSeconds(3);
+		UnityEngine.SceneManagement.SceneManager.LoadScene(0);
 	}
 }
