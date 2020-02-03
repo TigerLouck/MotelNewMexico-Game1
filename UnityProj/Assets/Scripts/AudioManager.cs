@@ -35,6 +35,18 @@ public class AudioManager : MonoBehaviour
         engineSound.Play();
     }
 
+    public void IncreaseEnginePitch(float rpm)
+    {
+        engineSound.pitch += Time.deltaTime * rpm / 550;
+        engineSound.pitch = Mathf.Clamp(engineSound.pitch, 1, 2);
+    }
+
+    public void DecreaseEnginePitch(float rpm)
+    {
+        engineSound.pitch -= Time.deltaTime * rpm / 550;
+        engineSound.pitch = Mathf.Clamp(engineSound.pitch, 1, 2);
+    }
+
     public void PlayButton()
     {
         buttonSound.Play();
@@ -59,4 +71,6 @@ public class AudioManager : MonoBehaviour
     {
         buttonSound.Stop();
     }
+
+    
 }

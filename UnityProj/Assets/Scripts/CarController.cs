@@ -21,6 +21,7 @@ public class CarController : MonoBehaviour
 		thisRB = GetComponent<Rigidbody>();
 		thisRB.centerOfMass = new Vector3(0, -.75f, -.1f);
 		dedText.gameObject.SetActive(false);
+		audioManager.PlayEngine();
 	}
 
 	// Update is called once per frame
@@ -33,10 +34,11 @@ public class CarController : MonoBehaviour
 			// Simulation
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
-				audioManager.PlayEngine();
 				wheel.motorTorque = 2500;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
+				Debug.Log(wheel.rpm);
+				audioManager.IncreaseEnginePitch(wheel.rpm);
 				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
 			}
 			else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
@@ -48,7 +50,7 @@ public class CarController : MonoBehaviour
 			}
 			else
 			{
-				audioManager.StopEngine();
+				audioManager.DecreaseEnginePitch(wheel.rpm);
 				wheel.motorTorque = 0;
 				wheel.brakeTorque = 700;
 			}
