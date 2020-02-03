@@ -14,8 +14,6 @@ public class CarController : MonoBehaviour
 
 	public AudioManager audioManager;
 
-
-
 	void Start()
 	{
 		thisRB = GetComponent<Rigidbody>();
