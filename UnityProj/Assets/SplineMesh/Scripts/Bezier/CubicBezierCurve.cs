@@ -188,12 +188,12 @@ namespace SplineMesh {
                     break;
                 }
                 previous = cp;
+                
             }
             if (next == null) {
                 throw new Exception("Can't find curve samples.");
             }
             float t = next == previous ? 0 : (d - previous.distanceInCurve) / (next.distanceInCurve - previous.distanceInCurve);
-
             return CurveSample.Lerp(previous, next, t);
         }
 

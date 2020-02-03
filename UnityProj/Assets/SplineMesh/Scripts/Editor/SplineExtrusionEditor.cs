@@ -28,8 +28,8 @@ namespace SplineMesh {
             Event e = Event.current;
             if (e.type == EventType.MouseDown) {
                 Undo.RegisterCompleteObjectUndo(se, "change extruded shape");
-                // if control key pressed, we will have to create a new vertex if position is changed
-                if (e.control) {
+                // if Shift key pressed, we will have to create a new vertex if position is changed
+                if (e.shift) {
                     mustCreateNewNode = true;
                 }
             }
@@ -129,7 +129,7 @@ namespace SplineMesh {
         public override void OnInspectorGUI() {
             serializedObject.Update();
             // Add vertex hint
-            EditorGUILayout.HelpBox("Hold Control and drag a vertex to create a new one.", MessageType.Info);
+            EditorGUILayout.HelpBox("Hold Shift and drag a vertex to create a new one.", MessageType.Info);
 
             // Delete vertex button
             if (selection == null || se.shapeVertices.Count <= 3) {

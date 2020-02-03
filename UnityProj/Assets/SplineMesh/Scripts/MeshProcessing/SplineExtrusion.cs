@@ -43,8 +43,10 @@ namespace SplineMesh {
             shapeVertices.Add(new ExtrusionSegment.Vertex(new Vector2(-1, -0.5f), new Vector2(-1, -1), 0.66f));
             toUpdate = true;
             OnEnable();
+            
         }
 
+        
         private void OnValidate() {
             toUpdate = true;
         }
@@ -87,6 +89,7 @@ namespace SplineMesh {
 
                 textureOffset += curve.Length;
             }
+            
         }
 
         public void SetToUpdate() {
