@@ -9,6 +9,8 @@ public class CarController : MonoBehaviour
 	public WheelCollider[] steeringWheels;
 	public float speedCap;
 	Rigidbody thisRB;
+	float lastGroundedElevation;
+	public UnityEngine.UI.Text dedText;
 
 	public AudioManager audioManager;
 
@@ -16,7 +18,10 @@ public class CarController : MonoBehaviour
 	{
 		thisRB = GetComponent<Rigidbody>();
 		thisRB.centerOfMass = new Vector3(0, -.75f, -.1f);
+		dedText.gameObject.SetActive(false);
+		audioManager.PlayEngine();
 	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -27,10 +32,11 @@ public class CarController : MonoBehaviour
 			// Simulation
 			if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
 			{
-				audioManager.PlayEngine();
 				wheel.motorTorque = 2500;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
+				Debug.Log(wheel.rpm);
+				audioManager.IncreaseEnginePitch(wheel.rpm);
 				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
 			}
 			else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
@@ -42,7 +48,7 @@ public class CarController : MonoBehaviour
 			}
 			else
 			{
-				audioManager.StopEngine();
+				audioManager.DecreaseEnginePitch(wheel.rpm);
 				wheel.motorTorque = 0;
 				wheel.brakeTorque = 700;
 			}
@@ -83,6 +89,10 @@ public class CarController : MonoBehaviour
 			wheel.steerAngle = steer;
 			if(wheel.GetGroundHit(out hit))
             {
+				//Wheel grounding rider for kill floor
+				lastGroundedElevation = hit.point.y;
+
+				//Sounds
 				//Debug.Log(hit.sidewaysSlip);
 				if((hit.sidewaysSlip > .1f || hit.sidewaysSlip < -.1f) && isSlipping == false)
                 {
@@ -97,6 +107,28 @@ public class CarController : MonoBehaviour
             }
 		}
 
+		//Kill Floor
+		if (transform.position.y < lastGroundedElevation - 50)
+		{
+			dedText.gameObject.SetActive(true);
+			StartCoroutine(DieAndRespawn());
+		}
 		
+	}
+
+	IEnumerator DieAndRespawn()
+	{
+		yield return new WaitForSeconds(3);
+		UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+	}
+
+	private void OnDisable()
+	{
+		GetComponentInChildren<CameraLook>().enabled = false;
+	}
+
+	private void OnEnable()
+	{
+		GetComponentInChildren<CameraLook>().enabled = true;
 	}
 }
