@@ -41,9 +41,9 @@ public class AudioManager : MonoBehaviour
         engineSound.pitch = Mathf.Clamp(engineSound.pitch, 1, 2);
     }
 
-    public void DecreaseEnginePitch(float rpm)
+    public void DecreaseEnginePitch()
     {
-        engineSound.pitch -= Time.deltaTime * rpm / 550;
+        engineSound.pitch -= Time.deltaTime * .25f;
         engineSound.pitch = Mathf.Clamp(engineSound.pitch, 1, 2);
     }
 

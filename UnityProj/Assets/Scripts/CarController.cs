@@ -11,7 +11,7 @@ public class CarController : MonoBehaviour
 	Rigidbody thisRB;
 	float lastGroundedElevation;
 	public UnityEngine.UI.Text dedText;
-
+	bool isSlipping;
 	public AudioManager audioManager;
 
 	void Start()
@@ -20,13 +20,13 @@ public class CarController : MonoBehaviour
 		thisRB.centerOfMass = new Vector3(0, -.75f, -.1f);
 		dedText.gameObject.SetActive(false);
 		audioManager.PlayEngine();
+		isSlipping = false;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		// Move the wheels
-		
 		foreach (WheelCollider wheel in wheels)
 		{
 			// Simulation
@@ -35,9 +35,11 @@ public class CarController : MonoBehaviour
 				wheel.motorTorque = 2500;
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60)/speedCap);
-				Debug.Log(wheel.rpm);
-				audioManager.IncreaseEnginePitch(wheel.rpm);
 				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
+
+				// increase the pitch of the engine
+				audioManager.IncreaseEnginePitch(wheel.rpm);
+				
 			}
 			else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
 			{
@@ -45,10 +47,13 @@ public class CarController : MonoBehaviour
 				// get meters per second, then use as dividend over maximum speed, then fraction of max torque
 				wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
 				// At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
+
+				// increase the pitch of the engine
+				audioManager.IncreaseEnginePitch(Mathf.Abs(wheel.rpm));
 			}
 			else
 			{
-				audioManager.DecreaseEnginePitch(wheel.rpm);
+				audioManager.DecreaseEnginePitch();
 				wheel.motorTorque = 0;
 				wheel.brakeTorque = 700;
 			}
@@ -59,7 +64,6 @@ public class CarController : MonoBehaviour
 			wheel.GetWorldPose(out outPos, out outRot); //fucking dumb architecture
 			wheel.transform.GetChild(0).position = outPos;
 			wheel.transform.GetChild(0).rotation = outRot;
-
 		}
 
 		//steer
@@ -81,9 +85,9 @@ public class CarController : MonoBehaviour
 			steer = Mathf.Clamp(camOrient, 0, 50); // 0, 50
 		}
 
-
-		bool isSlipping = false;
 		WheelHit hit = new WheelHit();
+		// average of how much the tires are slipping side to side
+		float avgSlip = 0.0f;
 		foreach (WheelCollider wheel in steeringWheels)
 		{
 			wheel.steerAngle = steer;
@@ -91,20 +95,21 @@ public class CarController : MonoBehaviour
             {
 				//Wheel grounding rider for kill floor
 				lastGroundedElevation = hit.point.y;
-
-				//Sounds
-				//Debug.Log(hit.sidewaysSlip);
-				if((hit.sidewaysSlip > .1f || hit.sidewaysSlip < -.1f) && isSlipping == false)
-                {
-					audioManager.PlayScreech();
-					isSlipping = true;
-                }
-				else
-                {
-					audioManager.StopScreech();
-					isSlipping = false;
-				}
+				avgSlip += hit.sidewaysSlip;
             }
+		}
+
+		// screech audio check
+		avgSlip /= 4;
+		if ((avgSlip > .1f || avgSlip < -.1f) && isSlipping == false)
+		{
+			audioManager.PlayScreech();
+			isSlipping = true;
+		}
+		if (avgSlip < .1f && avgSlip > -.1f)
+		{
+			audioManager.StopScreech();
+			isSlipping = false;
 		}
 
 		//Kill Floor
