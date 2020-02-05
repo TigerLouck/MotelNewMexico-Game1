@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class SplineConnecter : MonoBehaviour
 {
+
+    public GameObject chaser;
+
     #region Timers
     [SerializeField]
     private float pieceTimer = 5f;
@@ -59,6 +62,9 @@ public class SplineConnecter : MonoBehaviour
             PlaceNewPiece ();
             rotTimerDelta = 0f;
         }
+        CurveSample FXSample = allSplines.currentGroup[0].GetComponent<Spline>().GetSample(rotTimerDelta / pieceTimer);
+        chaser.transform.position = FXSample.location + allSplines.currentGroup[0].transform.position;
+        chaser.transform.rotation = FXSample.Rotation * allSplines.currentGroup[0].transform.rotation;
     }
 
     private void FixedUpdate ()
