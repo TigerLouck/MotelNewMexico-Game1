@@ -165,12 +165,12 @@ public class SplineConnecter : MonoBehaviour
 
         GameObject newSpline = allSplines.GetRandomSpline ();
 
-        MoveToEndpoint (allSplines.currentGroup[count], newSpline);
+        MoveToEndpoint (allSplines.currentGroup[2], newSpline);
         allSplines.currentGroup.Add (newSpline);
-        //allSplines.currentGroup[lastCount].transform.position = new Vector3(0f,0f,-300f);
+        allSplines.currentGroup[lastCount].transform.position = new Vector3(0f,0f,-30000f);
         count++;
-        //allSplines.currentGroup.RemoveAt(0);
-        //allSplines.currentGroup.TrimExcess();
+        allSplines.currentGroup.Remove(allSplines.currentGroup[0]);
+        allSplines.currentGroup.TrimExcess();
     }
 
     private void UpdateRotationDelta ()

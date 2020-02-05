@@ -14,7 +14,7 @@ public class SplineGroup : MonoBehaviour
 
     private int straightCounter, leftCounter, rightCounter;
 
-    public PieceType previousPieceType;
+    public PieceType? previousPieceType = null;
 
     public List<GameObject> currentGroup;
 
@@ -24,7 +24,8 @@ public class SplineGroup : MonoBehaviour
     void Awake ()
     {
         straightCounter = 3;
-        leftCounter = rightCounter = 0;
+        leftCounter = 0;
+        rightCounter = 0;
         currentGroup = new List<GameObject> ();
         SetSplineArrays ();
     }
