@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    public GameObject spline; //the spline
+    public GameObject roadParent; //the road parent
     public GameObject car; //the car
     public float score; //tracks the score
     // Start is called before the first frame update
     void Start()
     {
         score = 0.0f;
-        spline = GameObject.Find("Spline");
+        roadParent = GameObject.Find("RoadParent");
         car = GameObject.Find("Car");
     }
 
@@ -19,10 +19,14 @@ public class Score : MonoBehaviour
     void Update()
     {
         //increase the score when the car passes the trigger collider
-        if(spline.GetComponent<DetectTrigger>().triggered)
+        //the -1 is there because the particles should be the last element of the list
+        for(int i=0;i<roadParent.transform.childCount-1;i++)
         {
-            //score += (new formula of tracking distance) //add the distance between the two nodes
-            Debug.Log("Triggered!");
+            if(roadParent.transform.GetChild(i).GetComponent<DetectTrigger>().triggered)
+            {
+                //score += (new formula of tracking distance) //add the distance between the two nodes
+                Debug.Log("Triggered!");
+            }
         }
     }
     
