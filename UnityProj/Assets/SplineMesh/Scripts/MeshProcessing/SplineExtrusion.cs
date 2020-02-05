@@ -45,7 +45,6 @@ namespace SplineMesh {
             OnEnable();
             
         }
-
         
         private void OnValidate() {
             toUpdate = true;

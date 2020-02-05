@@ -34,19 +34,19 @@ public class Score : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        nodes = spline.nodes; //if the spline script's nodes list changes, the changes will be reflected in this list
-        Vector3 lowestDiff = nodes[0].Position - car.transform.position;
-        //set new current when the car is close enough to the next node
-        for (int i = 0; i < nodes.Count; i++)
-        {
-            if ((car.transform.position.x-nodes[i].Position.x)<1&&(car.transform.position.x - nodes[i].Position.x) > -1&& 
-                (car.transform.position.z - nodes[i].Position.z) < 1 && (car.transform.position.z - nodes[i].Position.x) > -1)
-            {
-                previous = current; //set the previous node to be the old current before assigning a new current
-                current = nodes[i];
-                score += (previous.Position - current.Position).magnitude; //add the distance between the two nodes
-            }
-        }
+        // nodes = spline.nodes; //if the spline script's nodes list changes, the changes will be reflected in this list
+        // Vector3 lowestDiff = nodes[0].Position - car.transform.position;
+        // //set new current when the car is close enough to the next node
+        // for (int i = 0; i < nodes.Count; i++)
+        // {
+        //     if ((car.transform.position.x-nodes[i].Position.x)<1&&(car.transform.position.x - nodes[i].Position.x) > -1&& 
+        //         (car.transform.position.z - nodes[i].Position.z) < 1 && (car.transform.position.z - nodes[i].Position.x) > -1)
+        //     {
+        //         previous = current; //set the previous node to be the old current before assigning a new current
+        //         current = nodes[i];
+        //         score += (previous.Position - current.Position).magnitude; //add the distance between the two nodes
+        //     }
+        // }
 
     }
     //GUI box that displays the score
