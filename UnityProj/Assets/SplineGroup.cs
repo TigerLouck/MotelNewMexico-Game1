@@ -62,20 +62,7 @@ public class SplineGroup : MonoBehaviour
         Array values = Enum.GetValues (typeof (PieceType));
         int rand = UnityEngine.Random.Range (0, values.Length);
         PieceType piece = (PieceType) values.GetValue (rand);
-
-
-        //if the piece you got is the same as the last one (Not for straight pieces)
-        // while(piece==previousPieceType&&piece!=PieceType.Straight)
-        // {
-        //     rand = UnityEngine.Random.Range (0, values.Length);
-        //     piece = (PieceType) values.GetValue (rand);
-
-        //     if(piece!=previousPieceType)
-        //         break;
-        // }
-
         previousPieceType = piece;
-        
         return piece;
         
     }
