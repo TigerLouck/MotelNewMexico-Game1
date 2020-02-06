@@ -14,7 +14,7 @@ public class CameraLook : MonoBehaviour
 
 	private void Start()
 	{
-		startOrient = transform.rotation;
+        startOrient = transform.rotation;
 	}
 
 	// Update is called once per frame
