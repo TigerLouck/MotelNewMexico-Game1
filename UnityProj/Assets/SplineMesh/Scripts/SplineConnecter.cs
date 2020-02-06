@@ -49,22 +49,31 @@ public class SplineConnecter : MonoBehaviour
     {
         allSplines = gameObject.GetComponent<SplineGroup> ();
         GetStartingSplines ();
-        //PlaceNewPiece();
 
     }
 
     // Update is called once per frame
     void Update ()
     {
+        var bRotTimer = rotTimerDelta;
+        var newBool = false;
+        
         rotTimerDelta += Time.deltaTime;
         if (rotTimerDelta >= pieceTimer)
         {
+            newBool = true;
+            if(isDebugLogOn)
+                //Debug.Log("New Piece should spawn NOW");
             PlaceNewPiece ();
             rotTimerDelta = 0f;
         }
         CurveSample FXSample = allSplines.currentGroup[0].GetComponent<Spline>().GetSample(rotTimerDelta / pieceTimer);
         chaser.transform.position = FXSample.location + allSplines.currentGroup[0].transform.position;
         chaser.transform.rotation = FXSample.Rotation * allSplines.currentGroup[0].transform.rotation;
+        
+        if(newBool)
+            Debug.Log("NEW BOOL IS TRUE  "+"Before Timer: "+bRotTimer+" _____ " +"After Timer: "+rotTimerDelta);
+        Debug.Log("Before Timer: "+bRotTimer+" _____ " +"After Timer: "+rotTimerDelta);
     }
 
     private void FixedUpdate ()
@@ -123,58 +132,32 @@ public class SplineConnecter : MonoBehaviour
         end.transform.position = newPos;
 
         Vector3 diff = currentTransform.TransformPoint (fEndDir);
-        Vector3 newDir = (newPos - diff).normalized;
+        Vector3 newDir = (diff - newPos).normalized;
+        
 
-        switch (start.gameObject.tag)
+        // Orient Pieces accornding to the forward vector of the last piece in the group
+        if(newDir.x==1f)
         {
-            case "SplineLeft":
-                Debug.Log ("previous piece was spline left");
-                if (newDir.x % 1f == 0)
-                    end.transform.Rotate (new Vector3 (0f, 90f, 0f));
-                break;
-            case "SplineRight":
-                Debug.Log ("previous piece was spline right");
-                if (newDir.x % 1f == 0)
-                    end.transform.Rotate (new Vector3 (0f, -90f, 0f));
-                break;
-            case "SplineStraight":
-                Debug.Log ("previous piece was spline straight");
-                if (newDir.x == -1f)
-                    end.transform.Rotate (new Vector3 (0f, -90f, 0f));
-                else if (newDir.x == 1f)
-                    end.transform.Rotate (new Vector3 (0f, 90f, 0f));
-                break;
-            default:
-                break;
-
+            end.transform.Rotate(new Vector3(0f,-90f,0f));
         }
-
-        // Quaternion tempQ = Quaternion.Euler(newDir);
-        // Quaternion newRotation = new Quaternion(tempQ.x,tempQ.y,tempQ.z,0f);
-        // end.transform.rotation = newRotation;
+        else if(newDir.x==-1f)
+        {
+            end.transform.Rotate(new Vector3(0f,90f,0f));
+        }
+        else if(newDir.z==-1f)
+        {
+            end.transform.Rotate(new Vector3(0f,-180f,0f));
+        }
 
     }
 
-    int count = 2;
-    int lastCount = 0;
+    
     private void PlaceNewPiece ()
     {
-
-        if (count > allSplines.allSplinesLength)
-        {
-            count = 0;
-        }
-        if (lastCount > allSplines.allSplinesLength)
-        {
-            lastCount = 0;
-        }
-
         GameObject newSpline = allSplines.GetRandomSpline ();
-
         MoveToEndpoint (allSplines.currentGroup[2], newSpline);
         allSplines.currentGroup.Add (newSpline);
-        allSplines.currentGroup[lastCount].transform.position = new Vector3(0f,0f,-30000f);
-        count++;
+        allSplines.currentGroup[0].transform.position = new Vector3(0f,10000f,-30000f);
         allSplines.currentGroup.Remove(allSplines.currentGroup[0]);
         allSplines.currentGroup.TrimExcess();
     }
@@ -183,10 +166,7 @@ public class SplineConnecter : MonoBehaviour
     {
         rotTimerDelta += Time.deltaTime;
         if (rotTimerDelta >= pieceTimer)
-        {
             rotTimerDelta = 0;
-
-        }
     }
 
 }

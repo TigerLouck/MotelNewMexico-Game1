@@ -14,7 +14,7 @@ public class SplineGroup : MonoBehaviour
 
     private int straightCounter, leftCounter, rightCounter;
 
-    public PieceType? previousPieceType = null;
+    public PieceType previousPieceType;
 
     public List<GameObject> currentGroup;
 
@@ -40,6 +40,7 @@ public class SplineGroup : MonoBehaviour
         {
             currentGroup.Add (splineStraights[i]);
         }
+        previousPieceType = PieceType.Straight;
         List<GameObject> temp = new List<GameObject> ();
         foreach (GameObject g in splineStraights)
         {
@@ -62,18 +63,33 @@ public class SplineGroup : MonoBehaviour
         int rand = UnityEngine.Random.Range (0, values.Length);
         PieceType piece = (PieceType) values.GetValue (rand);
 
-        if (previousPieceType == piece && piece == PieceType.Left)
+        // if (previousPieceType == piece && piece == PieceType.Left)
+        // {
+        //     previousPieceType = PieceType.Right;
+        //     return PieceType.Right;
+        // }
+        // else if (previousPieceType == piece && piece == PieceType.Right)
+        // {
+        //     previousPieceType = PieceType.Left;
+        //     return PieceType.Left;
+        // }
+        // previousPieceType = piece;
+        // return piece;
+
+        //if the piece you got is the same as the last one (Not for straight pieces)
+        while(piece==previousPieceType&&piece!=PieceType.Straight)
         {
-            previousPieceType = PieceType.Right;
-            return PieceType.Right;
+            rand = UnityEngine.Random.Range (0, values.Length);
+            piece = (PieceType) values.GetValue (rand);
+
+            if(piece!=previousPieceType)
+                break;
         }
-        else if (previousPieceType == piece && piece == PieceType.Right)
-        {
-            previousPieceType = PieceType.Left;
-            return PieceType.Left;
-        }
-        previousPieceType = piece;
+
+        //Debug.Log("(SplineGroup.GetNewPiece): PieceType is: "+piece);
+        
         return piece;
+        
     }
 
     public GameObject GetRandomSpline ()
