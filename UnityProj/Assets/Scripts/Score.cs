@@ -26,14 +26,21 @@ public class Score : MonoBehaviour
         {
             if(roadParent.transform.GetChild(i).GetComponent<DetectTrigger>().triggered)
             {
-                if(firstScore)
+                //resets the unintnded increment
+                if (firstScore)
                 {
-                    score = 0.0f;
+                    score -= score+=(roadParent.transform.GetChild(i).transform.position.magnitude)-(roadParent.transform.GetChild(i-1).transform.position.magnitude);
                     firstScore = false;
                 }
                 else
                 {
-                    score += 50.0f; //add the distance between the two nodes
+                    //if tbe distance is negative, make it positive so that its added to the score instead of decreasing the score
+                    if((roadParent.transform.GetChild(i).transform.position.magnitude) - (roadParent.transform.GetChild(i - 1).transform.position.magnitude)<0)
+                    {
+                        score += ((roadParent.transform.GetChild(i).transform.position.magnitude) - (roadParent.transform.GetChild(i - 1).transform.position.magnitude)) * -1;
+                    }
+                    score+=(roadParent.transform.GetChild(i).transform.position.magnitude)-(roadParent.transform.GetChild(i-1).transform.position.magnitude);
+                    //score += 50.0f; //add the distance between the two nodes
                     roadParent.transform.GetChild(i).GetComponent<DetectTrigger>().triggered = false;
                 }
             }
