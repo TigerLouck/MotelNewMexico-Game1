@@ -7,12 +7,14 @@ public class Score : MonoBehaviour
     public GameObject roadParent; //the road parent
     public GameObject car; //the car
     public float score; //tracks the score
+    private bool firstScore; //without this, score increments immediately after starting to move
     // Start is called before the first frame update
     void Start()
     {
         score = 0.0f;
         roadParent = GameObject.Find("RoadParent");
         car = GameObject.Find("Car");
+        firstScore = true;
     }
 
     // Update is called once per frame
@@ -24,8 +26,16 @@ public class Score : MonoBehaviour
         {
             if(roadParent.transform.GetChild(i).GetComponent<DetectTrigger>().triggered)
             {
-                //score += (new formula of tracking distance) //add the distance between the two nodes
-                Debug.Log("Triggered!");
+                if(firstScore)
+                {
+                    score = 0.0f;
+                    firstScore = false;
+                }
+                else
+                {
+                    score += 50.0f; //add the distance between the two nodes
+                    roadParent.transform.GetChild(i).GetComponent<DetectTrigger>().triggered = false;
+                }
             }
         }
     }

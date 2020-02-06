@@ -15,6 +15,10 @@ public class DetectTrigger : MonoBehaviour
     {
         triggered = true;
     }
+    private void OnTriggerExit(Collider other)
+    {
+        triggered = false;
+    }
 
     // Update is called once per frame
     void Update()
