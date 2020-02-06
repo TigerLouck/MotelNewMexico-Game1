@@ -63,30 +63,18 @@ public class SplineGroup : MonoBehaviour
         int rand = UnityEngine.Random.Range (0, values.Length);
         PieceType piece = (PieceType) values.GetValue (rand);
 
-        // if (previousPieceType == piece && piece == PieceType.Left)
-        // {
-        //     previousPieceType = PieceType.Right;
-        //     return PieceType.Right;
-        // }
-        // else if (previousPieceType == piece && piece == PieceType.Right)
-        // {
-        //     previousPieceType = PieceType.Left;
-        //     return PieceType.Left;
-        // }
-        // previousPieceType = piece;
-        // return piece;
 
         //if the piece you got is the same as the last one (Not for straight pieces)
-        while(piece==previousPieceType&&piece!=PieceType.Straight)
-        {
-            rand = UnityEngine.Random.Range (0, values.Length);
-            piece = (PieceType) values.GetValue (rand);
+        // while(piece==previousPieceType&&piece!=PieceType.Straight)
+        // {
+        //     rand = UnityEngine.Random.Range (0, values.Length);
+        //     piece = (PieceType) values.GetValue (rand);
 
-            if(piece!=previousPieceType)
-                break;
-        }
+        //     if(piece!=previousPieceType)
+        //         break;
+        // }
 
-        //Debug.Log("(SplineGroup.GetNewPiece): PieceType is: "+piece);
+        previousPieceType = piece;
         
         return piece;
         

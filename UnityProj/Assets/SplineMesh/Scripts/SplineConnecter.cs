@@ -55,30 +55,14 @@ public class SplineConnecter : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        var bRotTimer = rotTimerDelta;
-        var newBool = false;
-        
-        rotTimerDelta += Time.deltaTime;
-        if (rotTimerDelta >= pieceTimer)
-        {
-            newBool = true;
-            if(isDebugLogOn)
-                //Debug.Log("New Piece should spawn NOW");
-            PlaceNewPiece ();
-            rotTimerDelta = 0f;
-        }
         CurveSample FXSample = allSplines.currentGroup[0].GetComponent<Spline>().GetSample(rotTimerDelta / pieceTimer);
         chaser.transform.position = FXSample.location + allSplines.currentGroup[0].transform.position;
         chaser.transform.rotation = FXSample.Rotation * allSplines.currentGroup[0].transform.rotation;
-        
-        if(newBool)
-            Debug.Log("NEW BOOL IS TRUE  "+"Before Timer: "+bRotTimer+" _____ " +"After Timer: "+rotTimerDelta);
-        Debug.Log("Before Timer: "+bRotTimer+" _____ " +"After Timer: "+rotTimerDelta);
     }
 
     private void FixedUpdate ()
     {
-        UpdateRotationDelta ();
+        UpdateRotationDelta();
     }
 
     // connects 3 straight pieces together to start out
@@ -166,7 +150,12 @@ public class SplineConnecter : MonoBehaviour
     {
         rotTimerDelta += Time.deltaTime;
         if (rotTimerDelta >= pieceTimer)
-            rotTimerDelta = 0;
+        {
+            if(isDebugLogOn)
+                Debug.Log("New Piece should spawn NOW");
+            PlaceNewPiece ();
+            rotTimerDelta = 0f;
+        }
     }
 
 }
