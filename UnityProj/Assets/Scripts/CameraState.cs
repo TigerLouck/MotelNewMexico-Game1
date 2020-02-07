@@ -9,7 +9,7 @@ public class CameraState : MonoBehaviour
     // (Choose from and to not to be the same as
     // the object you attach this script to)
     public GameObject startCanvas;
-    public GameObject camera;
+    new public GameObject camera;
     public Transform from;
     public Transform to;
     private float speed = 0.1f;
@@ -21,12 +21,21 @@ public class CameraState : MonoBehaviour
     public GameObject nextCanvas;
     public GameObject gameMaster;
     public GameObject carForStarting;
+    public SplineConnecter roadMaster;
 
 
     // Start is called before the first frame update
     void Start()
     {
         timeToGo = false;
+        roadMaster.enabled = false;
+        startCanvas.SetActive(true);
+        camera.SetActive(true);
+        nextCamera.SetActive(false);
+        nextCanvas.SetActive(false);
+        gameMaster.SetActive(false);
+        gameMaster.GetComponent<Score>().enabled = false;
+        roadMaster.enabled = false;
     }
 
     // Update is called once per frame
@@ -48,8 +57,9 @@ public class CameraState : MonoBehaviour
             camera.SetActive(false);
             nextCamera.SetActive(true);
             nextCanvas.SetActive(true);
-            gameMaster.GetComponent<GameMaster>().enabled = true;
-            carForStarting.GetComponent<CarController>().started = true;
+            gameMaster.SetActive(true);
+            gameMaster.GetComponent<Score>().enabled = true;
+            roadMaster.enabled = true;
         }
     }
 

@@ -5,10 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/RoadTest.unity
-    guid: 7e437386b30759147b458f09e3ecf77e
   - enabled: 1
-    path: Assets/Scenes/MovingSplineTest.unity
-    guid: 93f84856b2893704789bc19eb40bbcef
+    path: Assets/Scenes/Main.unity
+    guid: 32c43475409125c46a2ec5eca081b873
   m_configObjects: {}

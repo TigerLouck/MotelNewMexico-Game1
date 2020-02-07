@@ -52,17 +52,12 @@ public class SplineConnecter : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update ()
-    {
-        CurveSample FXSample = allSplines.currentGroup[0].GetComponent<Spline>().GetSample(rotTimerDelta / pieceTimer);
-        chaser.transform.position = FXSample.location + allSplines.currentGroup[0].transform.position;
-        chaser.transform.rotation = FXSample.Rotation * allSplines.currentGroup[0].transform.rotation;
-    }
-
     private void FixedUpdate ()
     {
         UpdateRotationDelta();
+        CurveSample FXSample = allSplines.currentGroup[0].GetComponent<Spline>().GetSample(rotTimerDelta / pieceTimer);
+        chaser.transform.position = allSplines.currentGroup[0].transform.rotation * FXSample.location + allSplines.currentGroup[0].transform.position;
+        chaser.transform.rotation = FXSample.Rotation * allSplines.currentGroup[0].transform.rotation;
     }
 
     // connects 3 straight pieces together to start out

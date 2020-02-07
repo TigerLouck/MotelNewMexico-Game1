@@ -13,7 +13,7 @@ public class CarController : MonoBehaviour
     public UnityEngine.UI.Text dedText;
     bool isSlipping;
     public AudioManager audioManager;
-    public bool started;
+    public CameraLook camPivot;
 
     void Start()
     {
@@ -22,7 +22,6 @@ public class CarController : MonoBehaviour
         dedText.gameObject.SetActive(false);
         audioManager.PlayEngine();
         isSlipping = false;
-        started = false;
     }
 
     // Update is called once per frame
@@ -31,35 +30,38 @@ public class CarController : MonoBehaviour
         // Move the wheels
         foreach (WheelCollider wheel in wheels)
         {
-            // Simulation
-            if ((Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space)) && started)
+
+            if (camPivot.gameObject.activeInHierarchy)
             {
-                wheel.motorTorque = 2500;
-                // get meters per second, then use as dividend over maximum speed, then fraction of max torque
-                wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
-                // At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
+                // Simulation
+                if ((Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space)))
+                {
+                    wheel.motorTorque = 2500;
+                    // get meters per second, then use as dividend over maximum speed, then fraction of max torque
+                    wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
+                    // At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
 
-                // increase the pitch of the engine
-                audioManager.IncreaseEnginePitch(wheel.rpm);
+                    // increase the pitch of the engine
+                    audioManager.IncreaseEnginePitch(wheel.rpm);
 
+                }
+                else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
+                {
+                    wheel.motorTorque = -2500;
+                    // get meters per second, then use as dividend over maximum speed, then fraction of max torque
+                    wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
+                    // At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
+
+                    // increase the pitch of the engine
+                    audioManager.IncreaseEnginePitch(Mathf.Abs(wheel.rpm));
+                }
+                else
+                {
+                    audioManager.DecreaseEnginePitch();
+                    wheel.motorTorque = 0;
+                    wheel.brakeTorque = 700;
+                }
             }
-            else if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftAlt))
-            {
-                wheel.motorTorque = -2500;
-                // get meters per second, then use as dividend over maximum speed, then fraction of max torque
-                wheel.brakeTorque = 2500 * ((Mathf.Abs(wheel.rpm) * wheel.radius * Mathf.PI / 60) / speedCap);
-                // At maximum speed, brake torque equals motor torque, at greater than max speed, brake torque exceeds it
-
-                // increase the pitch of the engine
-                audioManager.IncreaseEnginePitch(Mathf.Abs(wheel.rpm));
-            }
-            else
-            {
-                audioManager.DecreaseEnginePitch();
-                wheel.motorTorque = 0;
-                wheel.brakeTorque = 700;
-            }
-
             //Visuals
             Vector3 outPos;
             Quaternion outRot;
@@ -98,6 +100,7 @@ public class CarController : MonoBehaviour
                 //Wheel grounding rider for kill floor
                 lastGroundedElevation = hit.point.y;
                 avgSlip += hit.sidewaysSlip;
+                avgSlip += hit.forwardSlip;
             }
         }
 
@@ -126,16 +129,23 @@ public class CarController : MonoBehaviour
     IEnumerator DieAndRespawn()
     {
         yield return new WaitForSeconds(3);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     private void OnDisable()
     {
-        GetComponentInChildren<CameraLook>().enabled = false;
+        camPivot = GetComponentInChildren<CameraLook>();
+        if (camPivot)
+        {
+            camPivot.enabled = false;
+        }
     }
 
     private void OnEnable()
     {
-        GetComponentInChildren<CameraLook>().enabled = true;
+        if (camPivot)
+        camPivot.enabled = true;
     }
 }
